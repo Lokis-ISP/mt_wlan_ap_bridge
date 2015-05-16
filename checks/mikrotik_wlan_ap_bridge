@@ -2,12 +2,14 @@
 
 mikrotik_wlan_ap_bridge_default_values = ((50, 5), (0, 0))
 
+
 def inventory_mikrotik_wlan_ap_bridge(info):
     inventory = []
     for name, iftype, status, ssid, clients, freq, band, ccq in info:
         if iftype == '71' and len(ssid) > 0 and status == '1':
             inventory.append((name, mikrotik_wlan_ap_bridge_default_values))
     return inventory
+
 
 def check_mikrotik_wlan_ap_bridge(item, params, info):
     # unpack thresholds
@@ -21,8 +23,9 @@ def check_mikrotik_wlan_ap_bridge(item, params, info):
                 ('overall-ccq', ccq, ccqwarn, ccqcrit, 0, 100),
             ]
 
-            summary = 'Clients: %s, Overall CCQ: %s, SSID: %s, Freq: %s, Band: %s' % (
-                clients, ccq, ssid, freq, band)
+            summary = \
+                'Clients: %s, Overall CCQ: %s, SSID: %s, Freq: %s, Band: %s' \
+                % (clients, ccq, ssid, freq, band)
 
             if clients < clientscrit or ccq < ccqcrit:
                 return (
@@ -65,4 +68,4 @@ snmp_info['mikrotik_wlan_ap_bridge'] = (
 )
 
 snmp_scan_functions['mikrotik_wlan_ap_bridge'] = \
-    lambda oid: oid('.1.3.6.1.4.1.14988.1.1.1.3.1.*') != None
+    lambda oid: oid('.1.3.6.1.4.1.14988.1.1.1.3.1.*') is not None
